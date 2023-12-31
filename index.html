@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+          margin: 0;
+          padding: 0;
+          justify-content: center;
+          align-items: center;
+          text-align: center;
+          height: 100%;
+        }
+
+      </style>
+    <title>Document</title>
+</head>
+<body >
+    <h1 style="color: blue;">Welcome to decision HUB</h1>
+    <h3 style="color: blue;">Rule Builder Application demo</h3>
+    <hr>
+    <p>For Example consider two condition for granting a loan <br> Condition 1 :  CIBIL >=400 <br> Condition 2 : Overdue <= 400000  </p>
+    <p>Then in that case enter CIBIL(variable name 1) in box 1 , symbol in box 2 & value in box 3 . Same for condition 2</p>
+    <p>Select Any/Atleast/Atmost/All</p>
+    <p>Then enter the value for the individual analyst want to check , and the result will be printed .</p>
+    <form>
+        <input type="text" placeholder="variable 1" id="variable1">
+        <input type="text" placeholder="Condition 1" id="condition1">
+        <input type="text" placeholder="value 1" id="value1">
+        <br>
+        <input type="text" placeholder="variable 2" id="variable2">
+        <input type="text" placeholder="Condition 2" id="condition2">
+        <input type="text" placeholder="value 2" id="value2">
+        <br><br>
+        <input type="text" placeholder="constraint" id="constraint">
+        <br><br>
+        <input type="submit" id="sub">
+    </form>
+    <p id="info"></p>
+    <p id="result"></p>
+
+    <script src="app.js"></script>
+</body>
+</html>
