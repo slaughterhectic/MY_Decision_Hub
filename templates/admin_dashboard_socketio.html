@@ -1,0 +1,61 @@
+<!-- admin_dashboard_socketio.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Dashboard - {{ username }}</h1>
+        <div>
+            <h2>Send Message</h2>
+            <form action="{{ url_for('admin_dashboard', username=username) }}" method="post" class="message-form">
+                <label for="recipient">Send Message to:</label>
+                <select name="recipient">
+                    <option value="all">All Users</option>
+                    {% for user in data %}
+                        <option value="{{ user }}">{{ user }}</option>
+                    {% endfor %}
+                </select>
+                <br>
+                <label for="message">Message:</label>
+                <input type="text" id="message" name="message" required>
+                <input type="submit" value="Send">
+            </form>
+        </div>
+        <div>
+            <h2>User Queries and Responses</h2>
+            {% for user, user_data in data.items() %}
+                <div class="message">
+                    <strong>{{ user }}</strong><br>
+                    {% for item in user_data['queries'] %}
+                        {{ item }}<br>
+                    {% endfor %}
+                    {% for item in user_data['responses'] %}
+                        {{ item }}<br>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+        socket.on('update_response', function(msg) {
+            var username = msg['username'];
+            var response = msg['response'];
+            document.querySelectorAll('.message').forEach(function(element) {
+                if (element.innerHTML.includes(username)) {
+                    element.innerHTML += '<br>' + response;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

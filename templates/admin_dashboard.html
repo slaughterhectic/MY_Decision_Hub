@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <div class="container">
+        <h2>Welcome, {{ username }}!</h2>
+        <h3>User Queries:</h3>
+        {% for user, queries in data.items() %}
+            <h4>{{ user }}</h4>
+            <ul>
+                {% for query in queries['queries'] %}
+                    <li>
+                        {{ query }}
+                        <form action="{{ url_for('admin_dashboard', username=username) }}" method="post" class="message-form">
+                            <label for="message">Reply:</label>
+                            <input type="text" id="message" name="message" required>
+                            <input type="hidden" id="recipient" name="recipient" value="{{ user }}">
+                            <input type="hidden" id="query_index" name="query_index" value="{{ loop.index0 }}">
+                            <input type="submit" value="Send">
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+
+        <form action="{{ url_for('admin_dashboard', username=username) }}" method="post" class="message-form">
+            <label for="message">Send Message to Users:</label>
+            <input type="text" id="message" name="message" required>
+            <label for="recipient">Select User:</label>
+            <select id="recipient" name="recipient" required>
+                {% for user, _ in data.items() %}
+                    <option value="{{ user }}">{{ user }}</option>
+                {% endfor %}
+            </select>
+            <input type="hidden" id="query_index" name="query_index" value="-1">
+            <input type="submit" value="Send">
+        </form>
+    </div>
+</body>
+</html>
