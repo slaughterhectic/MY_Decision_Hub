@@ -4,42 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* Add some additional CSS for the interactive user containers */
+        .user-container {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .user-container:hover {
+            background-color: #f0f0f0;
+        }
+
+        .conversation-box {
+            display: none;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 10px;
+            padding: 10px;
+        }
+    </style>
     <title>Admin Dashboard</title>
 </head>
 <body>
     <div class="container">
         <h2>Welcome, {{ username }}!</h2>
-        <h3>User Queries:</h3>
-        {% for user, queries in data.items() %}
-            <h4>{{ user }}</h4>
-            <ul>
-                {% for query in queries['queries'] %}
-                    <li>
-                        {{ query }}
-                        <form action="{{ url_for('admin_dashboard', username=username) }}" method="post" class="message-form">
-                            <label for="message">Reply:</label>
-                            <input type="text" id="message" name="message" required>
-                            <input type="hidden" id="recipient" name="recipient" value="{{ user }}">
-                            <input type="hidden" id="query_index" name="query_index" value="{{ loop.index0 }}">
-                            <input type="submit" value="Send">
-                        </form>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% endfor %}
+        <h3>User Conversations:</h3>
 
-        <form action="{{ url_for('admin_dashboard', username=username) }}" method="post" class="message-form">
-            <label for="message">Send Message to Users:</label>
-            <input type="text" id="message" name="message" required>
-            <label for="recipient">Select User:</label>
-            <select id="recipient" name="recipient" required>
-                {% for user, _ in data.items() %}
-                    <option value="{{ user }}">{{ user }}</option>
-                {% endfor %}
-            </select>
-            <input type="hidden" id="query_index" name="query_index" value="-1">
-            <input type="submit" value="Send">
-        </form>
+        <div>
+            {% for user, queries in data.items() %}
+                <div class="user-container" onclick="toggleConversation('{{ user }}')">
+                    <h4>{{ user }}</h4>
+                </div>
+                <div id="{{ user }}-conversation" class="conversation-box">
+                    <ul class="message-list">
+                        {% for query in queries['queries'] %}
+                            <li class="message-item">
+                                {{ query }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <form action="{{ url_for('admin_dashboard', username=username) }}" method="post" class="message-form">
+                        <label for="{{ user }}-message">Reply:</label>
+                        <input type="text" id="{{ user }}-message" name="message" required>
+                        <input type="hidden" id="{{ user }}-recipient" name="recipient" value="{{ user }}">
+                        <input type="hidden" id="{{ user }}-query_index" name="query_index" value="-1">
+                        <input type="submit" value="Send">
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
     </div>
+
+    <script>
+        // JavaScript function to toggle the visibility of conversation boxes
+        function toggleConversation(userId) {
+            var conversationBox = document.getElementById(userId + "-conversation");
+            if (conversationBox.style.display === "none" || conversationBox.style.display === "") {
+                conversationBox.style.display = "block";
+            } else {
+                conversationBox.style.display = "none";
+            }
+        }
+
+    </script>
 </body>
 </html>
